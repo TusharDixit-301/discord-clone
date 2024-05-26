@@ -1,4 +1,6 @@
 'use client';
+import FileUpload from '@/components/file-upload';
+import { Button } from '@/components/ui/button';
 import {
 	Dialog,
 	DialogContent,
@@ -20,7 +22,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { Button } from '../ui/button';
 
 const formSchema = z.object({
 	name: z
@@ -76,7 +77,20 @@ const InitialModal = () => {
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 						<div className="space-y-8 px-6">
 							<div className="flex items-center justify-center text-center">
-								TODO: Add image upload
+								<FormField
+									control={form.control}
+									name="image"
+									render={({ field }) => (
+										<FormItem>
+											<FormControl>
+												<FileUpload 
+												endpoint="serverImage"
+												value={field.value}
+												onChange={field.onChange} />
+											</FormControl>
+										</FormItem>
+									)}
+								/>
 							</div>
 							<FormField
 								control={form.control}
