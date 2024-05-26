@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -30,7 +32,7 @@ const formSchema = z.object({
 			message: 'Name must be at least 3 characters long',
 		})
 		.max(32),
-	image: z
+	imageUrl: z
 		.string()
 		.min(1, {
 			message: 'Server image is required',
@@ -41,6 +43,8 @@ const formSchema = z.object({
 const InitialModal = () => {
 	const [isMounted, setIsMounted] = useState(false);
 
+	const router = useRouter();
+
 	useEffect(() => {
 		setIsMounted(true);
 	}, []);
@@ -49,14 +53,21 @@ const InitialModal = () => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: '',
-			image: '',
+			imageUrl: '',
 		},
 	});
 
 	const isLoading = form.formState.isSubmitting;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		console.log(values);
+		try {
+			await axios.post('/api/servers', values);
+			form.reset();
+			router.refresh();
+			window.location.reload();
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	if (!isMounted) return null;
@@ -79,14 +90,15 @@ const InitialModal = () => {
 							<div className="flex items-center justify-center text-center">
 								<FormField
 									control={form.control}
-									name="image"
+									name="imageUrl"
 									render={({ field }) => (
 										<FormItem>
 											<FormControl>
-												<FileUpload 
-												endpoint="serverImage"
-												value={field.value}
-												onChange={field.onChange} />
+												<FileUpload
+													endpoint="serverImage"
+													value={field.value}
+													onChange={field.onChange}
+												/>
 											</FormControl>
 										</FormItem>
 									)}
