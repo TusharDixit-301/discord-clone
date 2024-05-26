@@ -86,8 +86,8 @@ const InitialModal = () => {
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-						<div className="space-y-8 px-6">
-							<div className="flex items-center justify-center text-center">
+						<article className="space-y-8 px-6">
+							<article className="flex items-center justify-center text-center">
 								<FormField
 									control={form.control}
 									name="imageUrl"
@@ -103,7 +103,7 @@ const InitialModal = () => {
 										</FormItem>
 									)}
 								/>
-							</div>
+							</article>
 							<FormField
 								control={form.control}
 								name="name"
@@ -129,7 +129,7 @@ const InitialModal = () => {
 									</FormItem>
 								)}
 							/>
-						</div>
+						</article>
 						<DialogFooter className="bg-gray-100 px-6 py-4">
 							<Button variant="primary" disabled={isLoading}>
 								Create
