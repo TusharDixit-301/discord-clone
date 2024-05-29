@@ -18,7 +18,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useModalStore } from '@/hooks/use-modal-store';
+import { useModal } from '@/hooks/use-modal-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -41,7 +41,7 @@ const formSchema = z.object({
 });
 
 const CreateServerModal = () => {
-	const {isOpen, onClose, type} = useModalStore();
+	const { isOpen, onClose, type } = useModal();
 	const router = useRouter();
 	const isModalOpen = isOpen && type === 'createServer';
 	const form = useForm({
@@ -68,7 +68,7 @@ const CreateServerModal = () => {
 	const handleClose = () => {
 		form.reset();
 		onClose();
-	}
+	};
 
 	return (
 		<Dialog open={isModalOpen} onOpenChange={handleClose}>

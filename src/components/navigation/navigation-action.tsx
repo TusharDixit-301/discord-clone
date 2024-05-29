@@ -1,10 +1,10 @@
 'use client';
 import ActionTooltip from '@/components/action-tooltip';
-import { useModalStore } from '@/hooks/use-modal-store';
+import { useModal } from '@/hooks/use-modal-store';
 import { Plus } from 'lucide-react';
 
 const NavigationAction = () => {
-	const { onOpen } = useModalStore();
+	const { onOpen } = useModal();
 	return (
 		<main>
 			<ActionTooltip side="right" align="center" label="Add a Server">
