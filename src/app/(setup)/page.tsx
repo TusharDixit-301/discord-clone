@@ -5,29 +5,29 @@ import { UserButton } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
 const SetupPage = async () => {
-	const profile = await initialProfile();
-	console.log('🚀 ~ SetupPage ~ profile:', profile);
-	const server = await db.server.findFirst({
-		where: {
-			members: {
-				some: {
-					profileId: profile.id,
-				},
-			},
-		},
-	});
-	console.log('🚀 ~ SetupPage ~ server:', server);
+  const profile = await initialProfile();
+  console.log('🚀 ~ SetupPage ~ profile:', profile);
+  const server = await db.server.findFirst({
+    where: {
+      members: {
+        some: {
+          profileId: profile.id,
+        },
+      },
+    },
+  });
+  console.log('🚀 ~ SetupPage ~ server:', server);
 
-	if (server) {
-		return redirect(`/servers/${server.id}`);
-	}
+  if (server) {
+    return redirect(`/servers/${server.id}`);
+  }
 
-	return (
-		<>
-			{/* <UserButton /> */}
-			<InitialModal />
-		</>
-	);
+  return (
+    <>
+      {/* <UserButton /> */}
+      <InitialModal />
+    </>
+  );
 };
 
 export default SetupPage;
