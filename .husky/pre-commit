@@ -1,0 +1,33 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '🏗️👷 Styling, testing, and building your project before committing'
+
+# Check Prettier standards and fix formatting
+bun run format ||
+(
+    echo '⚠️ Please check your code formatting.
+            Prettier check and fix failed. Run bun run format:fix, add the changes, and try committing again.';
+    false;
+)
+
+# Check ESLint Standards and fix linting issues
+bun run lint ||
+(
+    echo '⚠️ Please address the linting issues.
+            ESLint check and fix failed. Make the required changes listed above, add the changes, and try committing again.'
+    false; 
+)
+
+# If everything passes... Now we can build
+echo '✅ Formatting and linting checks passed. Building the project now.'
+
+bun run build ||
+(
+    echo '❌ Build failed.
+            Please review the errors above and try to resolve them.'
+    false;
+)
+
+# If everything passes... Now we can commit
+echo '✅ Build succeeded. Committing your changes now.'
