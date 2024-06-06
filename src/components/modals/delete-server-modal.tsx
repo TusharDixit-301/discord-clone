@@ -59,12 +59,15 @@ const DeleteServerModal = () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex flex-row justify-start gap-x-2 p-3 dark:bg-[#23262c]">
-          <Button variant="outline" className="w-24" onClick={handleClose}>
+          <Button className="" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="destructive" className="w-24" onClick={handleDelete}>
+          <Button
+            className="bg-red-500 text-white hover:bg-red-500/90"
+            onClick={handleDelete}
+          >
             {isLoading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="w-[40px] animate-spin" />
             ) : (
               'Delete'
             )}
