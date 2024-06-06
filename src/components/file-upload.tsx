@@ -1,10 +1,10 @@
 'use client';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { UploadDropzone } from '@/lib/uploadthing';
 import '@uploadthing/react/styles.css';
 import { X } from 'lucide-react';
 import Image from 'next/image';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface FileUploadProps {
   onChange: (url?: string) => void;
@@ -23,7 +23,7 @@ const FileUpload = ({ onChange, value, endpoint }: FileUploadProps) => {
           fill
           src={value}
           alt="Uploaded image"
-          className="w-full h-full rounded-full"
+          className="w-full h-full rounded-full shadow-lg"
         />
         <button
           onClick={() => onChange('')}

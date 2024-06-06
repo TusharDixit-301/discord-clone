@@ -19,6 +19,8 @@ const config = {
     },
     extend: {
       colors: {
+        pmDiscord: '#313338',
+        secDiscord: '#1e1f22',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
