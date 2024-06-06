@@ -93,16 +93,16 @@ const MembersModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-white text-black overflow-hidden">
-        <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">
+      <DialogContent className="bg-white dark:bg-pmDiscord text-black overflow-hidden dark:text-slate-200">
+        <DialogHeader className="pt-8 px-2">
+          <DialogTitle className="text-xl text-left font-bold">
             Manage Members
           </DialogTitle>
-          <DialogDescription className="text-center text-zinc-500">
+          <DialogDescription className="text-left text-zinc-500">
             {server?.members.length} Members
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="mt-8 max-h-[420px] pr-6">
+        <ScrollArea className="mt-6 max-h-[420px] px-4 py-4 bg-secDiscord rounded-lg">
           {server?.members.map((member) => (
             <section key={member.id} className="flex items-center gap-x-2 mb-6">
               <UserAvatar src={member.profile.imageUrl} />
@@ -118,7 +118,7 @@ const MembersModal = () => {
                   <article className="ml-auto">
                     <DropdownMenu>
                       <DropdownMenuTrigger>
-                        <MoreVertical className="w-4 h-4 text-zinc-500" />
+                        <MoreVertical className="w-4 h-4 text-zinc-400" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent side="left">
                         <DropdownMenuSub>

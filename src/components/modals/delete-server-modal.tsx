@@ -3,7 +3,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -17,20 +16,19 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 
 const DeleteServerModal = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
   const params = useParams();
-  const { server } = data;
-
-  const [isLoading, setIsLoading] = useState(false);
-
   const isModalOpen = isOpen && type === 'deleteServer';
+
+  const serverId = params.serverId;
 
   const handleDelete = async () => {
     try {
       setIsLoading(true);
       const url = qs.stringifyUrl({
-        url: `/api/servers/${params?.serverId}`,
+        url: `/api/servers/${serverId}`,
       });
       await axios.delete(url);
       router.refresh();
@@ -48,29 +46,26 @@ const DeleteServerModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="gap-y-2  overflow-hidden bg-white  p-0 text-black text-primary dark:bg-[#313338] dark:text-zinc-300">
-        <DialogHeader className="px-6 pt-8">
-          <DialogTitle className="text-start text-2xl font-bold text-muted-foreground dark:text-zinc-300">
-            Delete &apos;{server?.name}&apos;
+      <DialogContent className="bg-white dark:bg-pmDiscord text-black p-0 overflow-hidden dark:text-slate-200">
+        <DialogHeader className="pt-8 px-6">
+          <DialogTitle className="text-xl text-left font-bold">
+            Delete &apos;{data.server?.name}&apos;
           </DialogTitle>
-          <DialogDescription className="text-start text-lg text-zinc-300 dark:text-zinc-500">
-            Are you sure you want to delete server? Once deleted, it can not be
-            restored
-          </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="flex flex-row justify-start gap-x-2 p-3 dark:bg-[#23262c]">
+        <article className="px-6 text-[#D2D5D8] text-start">
+          Are you sure you really want to delete
+          <span className="font-semibold"> {data.server?.name}</span> server?
+          Once deleted, it can not be restored.
+        </article>
+        <DialogFooter className=" bg-secDiscord/50 flex flex-row gap-x-2 px-5 py-4">
           <Button className="" onClick={handleClose}>
             Cancel
           </Button>
           <Button
-            className="bg-red-500 text-white hover:bg-red-500/90"
+            className="bg-red-500 text-white w-20 hover:bg-red-500/90"
             onClick={handleDelete}
           >
-            {isLoading ? (
-              <Loader2 className="w-[40px] animate-spin" />
-            ) : (
-              'Delete'
-            )}
+            {isLoading ? <Loader2 className="animate-spin" /> : 'Delete'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -40,9 +40,9 @@ const LeaveServerModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white dark:bg-[#303338] text-black p-0 overflow-hidden dark:text-[#D0D2D4] text-muted-foreground">
+      <DialogContent className="bg-white dark:bg-pmDiscord text-black p-0 overflow-hidden dark:text-slate-200">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-xl text-start font-bold">
+          <DialogTitle className="text-xl text-left font-bold">
             Leave &apos;{data.server?.name}&apos;
           </DialogTitle>
         </DialogHeader>
@@ -51,20 +51,16 @@ const LeaveServerModal = () => {
           <span className="font-semibold">{data.server?.name}</span>? You
           won&apos;t be able to rejoin this server unless you are invited back.
         </article>
-        <DialogFooter className="flex justify-around px-4 py-4 gap-2 bg-zinc-200 dark:bg-[#2A2D31]">
+        <DialogFooter className=" bg-secDiscord/50 flex flex-row gap-x-2 px-5 py-4">
           <Button className="" onClick={handleClose}>
             Cancel
           </Button>
           <Button
-            className="bg-red-500 text-white hover:bg-red-500/90"
+            className="bg-red-500 text-white w-28 hover:bg-red-500/90"
             onClick={handleLeaveServer}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <Loader2 className="w-[85px] animate-spin" />
-            ) : (
-              'Leave Server'
-            )}
+            {isLoading ? <Loader2 className="animate-spin" /> : 'Leave Server'}
           </Button>
         </DialogFooter>
       </DialogContent>
