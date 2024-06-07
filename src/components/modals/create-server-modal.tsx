@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/input';
 import { useModal } from '@/hooks/use-modal-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
+import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
@@ -57,7 +58,6 @@ const CreateServerModal = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.post('/api/servers', values);
-      form.reset();
       router.refresh();
       onClose();
     } catch (error) {
@@ -72,12 +72,12 @@ const CreateServerModal = () => {
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-white text-black p-0 overflow-hidden">
+      <DialogContent className="bg-white dark:bg-pmDiscord text-black p-0 overflow-hidden dark:text-slate-200">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="text-2xl text-center font-bold">
+          <DialogTitle className="text-xl text-left font-bold">
             Customize your server !
           </DialogTitle>
-          <DialogDescription className="text-center">
+          <DialogDescription className="text-left text-gray-300/40">
             Give your server a personality by adding a name and a profile
             picture.You can always change this later.
           </DialogDescription>
@@ -107,7 +107,7 @@ const CreateServerModal = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
+                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-gray-400/80">
                       Server Name
                     </FormLabel>
                     <FormControl
@@ -118,8 +118,8 @@ const CreateServerModal = () => {
                     >
                       <Input
                         disabled={isLoading}
-                        className=""
-                        placeholder="Enter server name"
+                        className="bg-secDiscord text-gray-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        placeholder="Please enter server name"
                         {...field}
                       />
                     </FormControl>
@@ -128,9 +128,12 @@ const CreateServerModal = () => {
                 )}
               />
             </article>
-            <DialogFooter className="bg-gray-100 px-6 py-4">
-              <Button variant="primary" disabled={isLoading}>
-                Create
+            <DialogFooter className=" bg-secDiscord/50 flex flex-row gap-x-2 px-5 py-4">
+              <Button
+                disabled={isLoading}
+                className="w-32 bg-[#5865F2]/80 hover:bg-[#5865F2] text-white"
+              >
+                {isLoading ? <Loader2 className=" animate-spin" /> : 'Create'}
               </Button>
             </DialogFooter>
           </form>
