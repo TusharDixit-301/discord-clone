@@ -107,9 +107,9 @@ export async function PATCH(
       },
     });
 
-    return new NextResponse('Channel deleted successfully', { status: 200 });
+    return new NextResponse('Channel edited successfully', { status: 200 });
   } catch (error) {
-    console.log('[DELETE_CHANNEL]', error);
+    console.log('[EDIT_CHANNEL]', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }
