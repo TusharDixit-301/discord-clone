@@ -1,9 +1,10 @@
 'use client';
-import { useModal } from '@/hooks/use-modal-store';
+import { ModalType, useModal } from '@/hooks/use-modal-store';
 import { cn } from '@/lib/utils';
 import { Channel, ChannelType, MemberRole, Server } from '@prisma/client';
 import { Edit, Hash, Lock, Mic, Trash, Video } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
+import React from 'react';
 import ActionTooltip from '../action-tooltip';
 
 interface ServerChannelProps {
@@ -23,8 +24,19 @@ const ServerChannel = ({ channel, server, role }: ServerChannelProps) => {
   const router = useRouter();
   const params = useParams();
   const Icon = channelIconMap[channel.type];
+
+  const handleClick = () => {
+    router.push(`/servers/${server.id}/${channel.id}`);
+  };
+
+  const onAction = (e: React.MouseEvent, action: ModalType) => {
+    e.stopPropagation();
+    onOpen(action, { server, channel });
+  };
+
   return (
     <button
+      onClick={handleClick}
       className={cn(
         'group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-1',
         params.channelId === channel.id && 'bg-zinc-700/20 dark:bg-zinc-700'
@@ -45,13 +57,13 @@ const ServerChannel = ({ channel, server, role }: ServerChannelProps) => {
           <ActionTooltip label="Edit">
             <Edit
               className="hidden group-hover:block w-4 h-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-              onClick={() => onOpen('editChannel', { server, channel })}
+              onClick={(event) => onAction(event, 'editChannel')}
             />
           </ActionTooltip>
           <ActionTooltip label="Delete">
             <Trash
               className="hidden group-hover:block w-4 h-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-              onClick={() => onOpen('deleteChannel', { server, channel })}
+              onClick={(event) => onAction(event, 'deleteChannel')}
             />
           </ActionTooltip>
         </div>
