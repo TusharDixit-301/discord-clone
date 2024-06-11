@@ -22,7 +22,7 @@ const DeleteServerModal = () => {
   const params = useParams();
   const isModalOpen = isOpen && type === 'deleteServer';
 
-  const serverId = params.serverId;
+  const serverId = params?.serverId;
 
   const handleDelete = async () => {
     try {

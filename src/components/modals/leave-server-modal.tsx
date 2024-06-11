@@ -23,7 +23,7 @@ const LeaveServerModal = () => {
     onClose();
   };
 
-  const serverId = params.serverId;
+  const serverId = params?.serverId;
 
   const handleLeaveServer = async () => {
     try {
