@@ -56,7 +56,7 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
         )}
         {isAdmin && (
           <DropdownMenuItem
-            className="px-3 py-2 text-sm cursor-pointer hover:bg-indigo-500 hover:text-white"
+            className="px-3 py-2 text-sm cursor-pointer hover:bg-indigo-600 hover:text-white"
             onClick={() => onOpen('editServer', { server })}
           >
             Server Settings
@@ -65,7 +65,7 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
         )}
         {isAdmin && (
           <DropdownMenuItem
-            className="px-3 py-2 text-sm cursor-pointer hover:bg-indigo-500 hover:text-white"
+            className="px-3 py-2 text-sm cursor-pointer group-hover:bg-indigo-600 hover:text-white"
             onClick={() => onOpen('members', { server })}
           >
             Manage Members
@@ -74,7 +74,7 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
         )}
         {isModerator && (
           <DropdownMenuItem
-            className="px-3 py-2 text-sm cursor-pointer hover:bg-indigo-500 hover:text-white"
+            className="px-3 py-2 text-sm cursor-pointer hover:bg-indigo-600 hover:text-white"
             onClick={() => onOpen('createChannel')}
           >
             Create Channel
@@ -93,7 +93,7 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
         )}
         {!isAdmin && (
           <DropdownMenuItem
-            className="dark:text-red-500 px-3 py-2 text-sm cursor-pointer text-red-500"
+            className="dark:text-red-500 px-3 py-2 text-sm cursor-pointer text-red-500 hover:bg-red-500 hover:text-white"
             onClick={() => onOpen('leaveServer', { server })}
           >
             Leave Server

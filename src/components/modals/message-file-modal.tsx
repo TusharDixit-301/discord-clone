@@ -9,47 +9,36 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { useModal } from '@/hooks/use-modal-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import qs from 'query-string';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .min(3, {
-      message: 'Name must be at least 3 characters long',
-    })
-    .max(32),
-  imageUrl: z
+  fileUrl: z
     .string()
     .min(1, {
-      message: 'Server image is required',
+      message: 'Attachment is required',
     })
-    .url({ message: 'Server image must be a valid URL' }),
+    .url({ message: 'Attachment must be a valid URL' }),
 });
 
-const CreateServerModal = () => {
-  const { isOpen, onClose, type } = useModal();
+const MessageFileModal = () => {
+  const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
-  const isModalOpen = isOpen && type === 'createServer';
+
+  const isModalOpen = type === 'messageFile' && isOpen;
+  const { apiUrl, query } = data;
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      imageUrl: '',
+      fileUrl: '',
     },
   });
 
@@ -57,7 +46,13 @@ const CreateServerModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post('/api/servers', values);
+      const url = qs.stringifyUrl({
+        url: apiUrl || '',
+        query: query,
+      });
+
+      await axios.post(url, { ...values, content: values.fileUrl });
+      form.reset();
       router.refresh();
       onClose();
     } catch (error) {
@@ -75,11 +70,10 @@ const CreateServerModal = () => {
       <DialogContent className="bg-white dark:bg-pmDiscord text-black p-0 overflow-hidden dark:text-slate-200">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-xl text-left font-bold">
-            Customize your server !
+            Add an Attachment
           </DialogTitle>
           <DialogDescription className="text-left text-gray-300/40">
-            Give your server a personality by adding a name and a profile
-            picture.You can always change this later.
+            Send a file to your friends
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -88,12 +82,12 @@ const CreateServerModal = () => {
               <article className="flex items-center justify-center text-center">
                 <FormField
                   control={form.control}
-                  name="imageUrl"
+                  name="fileUrl"
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
                         <FileUpload
-                          endpoint="serverImage"
+                          endpoint="messageFile"
                           value={field.value}
                           onChange={field.onChange}
                         />
@@ -102,38 +96,13 @@ const CreateServerModal = () => {
                   )}
                 />
               </article>
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-gray-400/80">
-                      Server Name
-                    </FormLabel>
-                    <FormControl
-                      className="bg-zinc-300/50 border-0 text-black 
-                                        focus-visible:ring-0
-                                        focus-visible:ring-offset-0
-                                        "
-                    >
-                      <Input
-                        disabled={isLoading}
-                        className="bg-secDiscord text-gray-200 focus-visible:ring-0 focus-visible:ring-offset-0"
-                        placeholder="Please enter server name"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </article>
             <DialogFooter className=" bg-secDiscord/50 flex flex-row gap-x-2 px-5 py-4">
               <Button
                 disabled={isLoading}
                 className="w-32 bg-[#5865F2]/80 hover:bg-[#5865F2] text-white"
               >
-                {isLoading ? <Loader2 className=" animate-spin" /> : 'Create'}
+                {isLoading ? <Loader2 className=" animate-spin" /> : 'Send'}
               </Button>
             </DialogFooter>
           </form>
@@ -143,4 +112,4 @@ const CreateServerModal = () => {
   );
 };
 
-export default CreateServerModal;
+export default MessageFileModal;

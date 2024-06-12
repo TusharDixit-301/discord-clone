@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Dialog,
   DialogContent,
@@ -10,32 +11,38 @@ import { useModal } from '@/hooks/use-modal-store';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
+import qs from 'query-string';
 import { useState } from 'react';
 import { Button } from '../ui/button';
 
-const LeaveServerModal = () => {
+const DeleteChannelModal = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onClose, type, data } = useModal();
   const router = useRouter();
   const params = useParams();
-  const isModalOpen = isOpen && type === 'leaveServer';
-  const [isLoading, setIsLoading] = useState(false);
-  const handleClose = () => {
-    onClose();
-  };
+  const isModalOpen = isOpen && type === 'deleteChannel';
 
-  const serverId = params?.serverId;
+  const serverId = data.server?.id;
 
-  const handleLeaveServer = async () => {
+  const handleDelete = async () => {
     try {
       setIsLoading(true);
-      const res = await axios.delete(`/api/servers/${serverId}/leave-server`);
+      const url = qs.stringifyUrl({
+        url: `/api/channels/${data.channel?.id}`,
+        query: { serverId },
+      });
+      await axios.delete(url);
       router.refresh();
       onClose();
-    } catch (error) {
-      console.error('An error occurred while leaving the server', error);
+    } catch (err) {
+      console.log(err);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleClose = () => {
+    onClose();
   };
 
   return (
@@ -43,24 +50,23 @@ const LeaveServerModal = () => {
       <DialogContent className="bg-white dark:bg-pmDiscord text-black p-0 overflow-hidden dark:text-slate-200">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-xl text-left font-bold">
-            Leave &apos;{data.server?.name}&apos;
+            Delete Channel
           </DialogTitle>
         </DialogHeader>
         <article className="px-6 text-[#D2D5D8] text-start">
-          Do you really want to leave{' '}
-          <span className="font-semibold">{data.server?.name}</span>? You
-          won&apos;t be able to rejoin this server unless you are invited back.
+          Are you sure you really want to delete
+          <span className="font-bold"> #{data.channel?.name}</span> channel?
+          Once deleted, it can not be restored.
         </article>
         <DialogFooter className=" bg-secDiscord/50 flex flex-row gap-x-2 px-5 py-4">
           <Button className="" onClick={handleClose}>
             Cancel
           </Button>
           <Button
-            className="bg-red-500 text-white w-28 hover:bg-red-500/90"
-            onClick={handleLeaveServer}
-            disabled={isLoading}
+            className="bg-red-500 text-white w-20 hover:bg-red-500/90"
+            onClick={handleDelete}
           >
-            {isLoading ? <Loader2 className="animate-spin" /> : 'Leave Server'}
+            {isLoading ? <Loader2 className="animate-spin" /> : 'Delete'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -68,4 +74,4 @@ const LeaveServerModal = () => {
   );
 };
 
-export default LeaveServerModal;
+export default DeleteChannelModal;
