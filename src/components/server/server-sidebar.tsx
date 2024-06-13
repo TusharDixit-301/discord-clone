@@ -27,7 +27,7 @@ const channelIconMap = {
 
 const roleIconMap = {
   [MemberRole.GUEST]: (
-    <ShieldQuestion className="mr-2 h-4 w-4 text-green-500" />
+    <ShieldQuestion className="h-4 w-4 text-green-500 mr-2" />
   ),
   [MemberRole.MODERATOR]: (
     <ShieldCheck className="mr-2 h-4 w-4 text-indigo-500" />
@@ -187,17 +187,17 @@ const ServerSidebar = async ({ serverId }: { serverId: string }) => {
             </div>
           </div>
         )}
-        {!!members.length && (
+        {!!members?.length && (
           <div className="mb-2">
             <ServerSection
               sectionType="members"
+              server={server}
               role={myRole}
               label="Members"
-              server={server}
             />
             <div className="space-y-[2px]">
               {members.map((member) => (
-                <ServerMember key={member.id} server={server} member={member} />
+                <ServerMember key={member.id} member={member} server={server} />
               ))}
             </div>
           </div>

@@ -58,7 +58,7 @@ export async function DELETE(
 
     return NextResponse.json(server);
   } catch (error) {
-    console.log('[DELETE_SERVER]', error);
+    console.error('[DELETE_SERVER]', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }

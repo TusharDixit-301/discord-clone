@@ -35,7 +35,7 @@ const DeleteChannelModal = () => {
       router.refresh();
       onClose();
     } catch (err) {
-      console.log(err);
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
