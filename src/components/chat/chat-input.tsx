@@ -3,6 +3,7 @@ import { useModal } from '@/hooks/use-modal-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import qs from 'query-string';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -25,7 +26,7 @@ const formSchema = z.object({
 const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { onOpen } = useModal();
-
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,6 +43,8 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
         query: query,
       });
       await axios.post(url, value);
+      form.reset();
+      router.refresh();
     } catch (error) {
       console.log(error);
     } finally {
