@@ -37,7 +37,6 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
   const onSubmit = async (value: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
-      console.log(value);
       const url = qs.stringifyUrl({
         url: apiUrl,
         query: query,
@@ -46,7 +45,7 @@ const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
       form.reset();
       router.refresh();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
