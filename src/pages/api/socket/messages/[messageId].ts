@@ -21,7 +21,7 @@ export default async function handler(
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    if (!serverId || !channelId || !content || !messageId) {
+    if (!serverId || !channelId || !messageId) {
       return res
         .status(400)
         .json({ message: 'Server ID, ChannelId or Content missing' });
