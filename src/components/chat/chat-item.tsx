@@ -1,4 +1,5 @@
 'use client';
+import { useModal } from '@/hooks/use-modal-store';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Member, MemberRole, Profile } from '@prisma/client';
@@ -13,6 +14,7 @@ import {
   Trash,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useParams, useRouter } from 'next/navigation';
 import qs from 'query-string';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -40,12 +42,12 @@ interface ChatItemProps {
 
 const roleIconMap = {
   [MemberRole.GUEST]: (
-    <ShieldQuestion className="h-4 w-4 text-green-500 mr-2" />
+    <ShieldQuestion className="h-4 w-4 text-green-500 ml-2" />
   ),
   [MemberRole.MODERATOR]: (
-    <ShieldCheck className="mr-2 h-4 w-4 text-indigo-500" />
+    <ShieldCheck className="ml-2 h-4 w-4 text-indigo-500" />
   ),
-  [MemberRole.ADMIN]: <ShieldAlert className="mr-2 h-4 w-4 text-red-500" />,
+  [MemberRole.ADMIN]: <ShieldAlert className="ml-2 h-4 w-4 text-red-500" />,
 };
 
 const formSchema = z.object({
@@ -65,8 +67,9 @@ const ChatItem = ({
   socketQuery,
 }: ChatItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { onOpen } = useModal();
+  const router = useRouter();
+  const params = useParams();
 
   const isAdmin = currentMember.role === MemberRole.ADMIN;
   const isModerator = currentMember.role === MemberRole.MODERATOR;
@@ -89,7 +92,6 @@ const ChatItem = ({
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setIsSubmitting(true);
       const url = qs.stringifyUrl({
         url: `${socketUrl}/${id}`,
         query: socketQuery,
@@ -99,14 +101,17 @@ const ChatItem = ({
       setIsEditing(false);
     } catch (error) {
       console.error('Failed to save edit message : ', error);
-    } finally {
-      setIsSubmitting(false);
     }
+  };
+
+  const onMemberClick = () => {
+    if (member.id === currentMember.id) return;
+    router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
   };
 
   useEffect(() => {
     form.reset({ content });
-  }, [content]);
+  }, [content, form]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -119,25 +124,31 @@ const ChatItem = ({
   });
 
   return (
-    <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
-      <div className="group flex gap-x-2 items-start w-full">
-        <div className="cursor-pointer hover:drop-shadow-md transition">
+    <main className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
+      <section className="group flex gap-x-2 items-start w-full">
+        <figure
+          onClick={onMemberClick}
+          className="cursor-pointer hover:drop-shadow-md transition"
+        >
           <UserAvatar src={member.profile.imageUrl} />
-        </div>
-        <div className="flex flex-col w-full">
-          <div className="flex items-center gap-x-2">
-            <div className="flex items-center">
-              <p className="font-semibold text-sm hover:underline cursor-pointer">
+        </figure>
+        <section className="flex flex-col w-full">
+          <article className="flex items-center gap-x-2">
+            <article className="flex items-center">
+              <p
+                className="font-semibold text-sm hover:underline cursor-pointer"
+                onClick={onMemberClick}
+              >
                 {member.profile.name}
               </p>
               <ActionTooltip label={member.role}>
                 {roleIconMap[member.role]}
               </ActionTooltip>
-            </div>
+            </article>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">
               {timestamp}
             </span>
-          </div>
+          </article>
           {isImage && (
             <a
               href={fileUrl}
@@ -154,14 +165,14 @@ const ChatItem = ({
             </a>
           )}
           {isPDF && (
-            <div className="flex items-center relative p-2 mt-2 rounded-md bg-background/10">
+            <article className="flex items-center relative p-2 mt-2 rounded-md bg-background/10">
               <FileIcon
                 className="h-20 w-20 fill-indigo-200 stroke-indigo-400 hover:cursor-pointer"
                 onClick={() => {
                   window.open(fileUrl, '_blank', 'noopener,noreferrer');
                 }}
               />
-            </div>
+            </article>
           )}
           {!fileUrl && !isEditing && (
             <p
@@ -211,10 +222,10 @@ const ChatItem = ({
               </span>
             </Form>
           )}
-        </div>
-      </div>
+        </section>
+      </section>
       {canDeleteMessage && (
-        <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
+        <article className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
           {canEditMessage && (
             <ActionTooltip label="Edit">
               <Edit
@@ -226,12 +237,17 @@ const ChatItem = ({
           <ActionTooltip label="Delete">
             <Trash
               className="h-4 w-4 cursor-pointer ml-auto text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
-              onClick={() => setIsDeleting(true)}
+              onClick={() =>
+                onOpen('deleteMessage', {
+                  apiUrl: `${socketUrl}/${id}`,
+                  query: socketQuery,
+                })
+              }
             />
           </ActionTooltip>
-        </div>
+        </article>
       )}
-    </div>
+    </main>
   );
 };
 
