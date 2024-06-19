@@ -74,8 +74,11 @@ export async function GET(req: Request) {
     });
   } catch (error) {
     console.error('ERROR in Message Fetching ', error);
-    return new NextResponse('An error occurred while creating the server', {
-      status: 500,
-    });
+    return new NextResponse(
+      'An error occurred while fetching the message from the channel',
+      {
+        status: 500,
+      }
+    );
   }
 }
